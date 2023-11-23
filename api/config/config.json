@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "",
-    "database": "salao_de_festas",
+    "database": "",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

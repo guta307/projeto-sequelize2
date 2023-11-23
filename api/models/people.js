@@ -8,8 +8,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      People.hasMany(models.Events, { foreignKey: "hostId" });
-      People.hasMany(models.Feedback, { foreignKey: "participantId" });
+      People.hasMany(models.Events, { foreignKey: "hostId", as: "getEvents" });
+      People.hasMany(models.Feedback, {
+        foreignKey: "participantId",
+        as: "getFeedbacks",
+      });
     }
   }
   People.init(
@@ -45,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
       type: {
         type: DataTypes.STRING,
         validate: {
-          notIn: {
-            args: [["host,participant"]],
+          isIn: {
+            args: [["host", "participant"]],
             msg: "the value need to be either host or participant",
           },
         },
@@ -54,6 +57,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      defaultScope: {
+        where: {},
+      },
+      scopes: {
+        hosts: {
+          where: {
+            type: "host",
+          },
+        },
+        participants: {
+          where: {
+            type: "participant",
+          },
+        },
+      },
       paranoid: true,
       modelName: "People",
     }
